@@ -7,6 +7,9 @@ module SoarSc
 
     attr_reader :url
 
+    # @param uri [String]
+    # @param http [Object]
+    # @return [Object]
     def initialize(uri, http=Net::HTTP)
       raise ArgumentError, 'Please initialize me with a uri' if uri.nil?
       raise URI::InvalidURIError if not valid_url?(uri)
@@ -14,6 +17,9 @@ module SoarSc
       @http = http
     end
 
+    # @param identifier [String]
+    # @param role [String]
+    # @return [Hash]
     def ask_idr(identifier, role = nil)
       response = @http.start(@url.host, @url.port) do |http|
         params = build_params(identifier, role)
@@ -22,12 +28,17 @@ module SoarSc
       JSON.parse(response.body)
     end
 
+    # @param identifier [String]
+    # @param role [String]
+    # @return [String]
     def build_params(identifier, role = nil)
       params = "?identifier=#{identifier}"
       params += "&role=#{role}" if not role.nil?
       params
     end
 
+    # @param uri [String]
+    # @return [Boolean]
     def valid_url?(uri)
       result = uri =~ /\A#{URI::regexp(['http', 'https'])}\z/
       not result.nil?
