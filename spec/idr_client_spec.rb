@@ -36,7 +36,7 @@ describe SoarSc::IdrClient do
       expect(@idr_client.url).to be_an_instance_of(URI::HTTP)
     end
 
-    it 'url propertu should be instance of uri https' do
+    it 'url property should be instance of uri https' do
       expect(@secure_idr_client.url).to be_an_instance_of(URI::HTTPS)
     end
 
@@ -58,7 +58,7 @@ describe SoarSc::IdrClient do
   end
 
   context 'when asking idr for attributes of a role for a subject identifier' do
-    it 'should return ' do
+    it 'should return attributes' do
       response = double('', :body => '{"status":"success","data":{"attributes":{"hetznerPerson":{"name_and_surname":"Charles Mulder","email_address":"charles.mulder@hetzner.co.za"}},"notifications":["success"]}}')
       http_client = double("Net::HTTP", :start => response)
       allow(http_client).to receive(:get).and_return(response)
