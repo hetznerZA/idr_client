@@ -1,12 +1,13 @@
 require 'uri'
 require 'json'
+require 'net/http'
 
 module SoarSc
   class IdrClient
 
     attr_reader :url
 
-    def initialize(uri, http = Net::HTTP)
+    def initialize(uri, http=Net::HTTP)
       raise ArgumentError, 'Please initialize me with a uri' if uri.nil?
       raise URI::InvalidURIError if not valid_url?(uri)
       @url = URI.parse(uri)
