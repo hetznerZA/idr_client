@@ -3,13 +3,6 @@
 ## Documentation
 TODO
 
-```ruby
-module SoarSc
-  class IdrClient < SoarSc::SoarIdm
-  end
-end
-```
-
 ## Example use
 
 Get roles for subject identifier
