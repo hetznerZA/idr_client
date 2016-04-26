@@ -9,6 +9,6 @@ Gem::Specification.new do |s|
   s.files       = ["lib/idr_client.rb"]
   s.homepage    = 'http://rubygems.org/gems/hola'
   s.license       = 'MIT'
-  s.add_runtime_dependency "soar_pl", "~> 0.0.11"
+  s.add_runtime_dependency "soar_idm", "~> 0.0.2"
   s.add_development_dependency "rspec", "~> 3.3"
 end

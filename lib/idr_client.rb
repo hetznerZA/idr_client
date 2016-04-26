@@ -1,44 +1,59 @@
 require 'uri'
 require 'json'
 require 'net/http'
+require 'soar_idm/soar_idm'
 
 module SoarSc
-  class IdrClient
 
-    attr_reader :url
+  class IdrClient < SoarIdm::IdmApi
 
-    # @param uri [String]
-    # @param http [Object]
-    # @return [Object]
-    def initialize(uri, http=Net::HTTP)
-      raise ArgumentError, 'Please initialize me with a uri' if uri.nil?
-      raise URI::InvalidURIError if not valid_url?(uri)
-      @url = URI.parse(uri)
+    class MissingRequiredAttributeError < StandardError; end
+
+    attr_accessor :roles_uri
+    attr_accessor :attributes_uri
+
+    def initialize(http=Net::HTTP)
       @http = http
     end
 
-    # @param identifier [String]
-    # @param role [String]
-    # @return [Hash]
-    def ask_idr(identifier, role = nil)
-      response = @http.start(@url.host, @url.port) do |http|
+    def attributes_uri=(attributes_uri)
+      raise URI::InvalidURIError if not valid_url?(attributes_uri)
+      @attributes_uri = URI.parse(attributes_uri)
+    end
+
+    def roles_uri=(roles_uri)
+      raise URI::InvalidURIError if not valid_url?(roles_uri)
+      @roles_uri = URI.parse(roles_uri)
+    end
+
+    private 
+
+    def calculate_roles(identity)
+      raise MissingRequiredAttributeError, 'Missing required roles_uri' if @roles_uri.nil?
+      response = ask_idr(identity, nil, @roles_uri)
+      response['data']['roles']
+    end
+
+    def calculate_attributes(identity, role)
+      raise MissingRequiredAttributeError, 'Missing required @attributes_uri attribute' if @attributes_uri.nil?
+      response = ask_idr(identity, role, @attributes_uri)
+      response['data']['attributes'][role]
+    end 
+
+    def ask_idr(identifier, role = nil, url)
+      response = @http.start(url.host, url.port) do |http|
         params = build_params(identifier, role)
         http.get(url.path + params)
       end
       JSON.parse(response.body)
     end
 
-    # @param identifier [String]
-    # @param role [String]
-    # @return [String]
     def build_params(identifier, role = nil)
       params = "?identifier=#{identifier}"
       params += "&role=#{role}" if not role.nil?
       params
     end
 
-    # @param uri [String]
-    # @return [Boolean]
     def valid_url?(uri)
       result = uri =~ /\A#{URI::regexp(['http', 'https'])}\z/
       not result.nil?
