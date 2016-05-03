@@ -8,12 +8,38 @@ module SoarSc
   class IdrClient < SoarIdm::IdmApi
 
     class MissingRequiredAttributeError < StandardError; end
+    class CommunicationError < StandardError; end
+    class UnsupportedResponseError < StandardError; end
 
     attr_accessor :roles_uri
     attr_accessor :attributes_uri
 
     def initialize(http=Net::HTTP)
       @http = http
+    end
+
+    def get_roles(subject_identifier)
+      begin
+        super(subject_identifier)
+      rescue MissingRequiredAttributeError => error
+        raise error
+      rescue JSON::ParserError => error
+        raise UnsupportedResponseError, error.message
+      rescue StandardError => error
+        raise CommunicationError, error.message
+      end
+    end
+
+    def get_attributes(subject_identifier, role = nil)
+      begin
+        super(subject_identifier, role)
+      rescue MissingRequiredAttributeError => error
+        raise error
+      rescue JSON::ParserError => error
+        raise UnsupportedResponseError, error.message
+      rescue StandardError => error
+        raise CommunicationError, error.message
+      end
     end
 
     def attributes_uri=(attributes_uri)
