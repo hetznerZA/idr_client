@@ -54,6 +54,15 @@ module SoarSc
 
     private 
 
+    def calculate_identities(entity_identifier)
+      [entity_identifier]
+    end
+
+    def calculate_all_attributes(identity)
+      response = ask_idr(identity, nil, @attributes_uri)
+      response['data']['attributes']
+    end
+
     def calculate_roles(identity)
       raise MissingRequiredAttributeError, 'Missing required roles_uri' if @roles_uri.nil?
       response = ask_idr(identity, nil, @roles_uri)

@@ -28,49 +28,64 @@ describe SoarSc::IdrClient do
 
   describe '#get_roles' do
 
-    let(:idr_client) {
-      roles_response = double('', :body => '{"status":"success","data":{"roles":["hetznerPerson","inetOrgPerson","posixAccount","top"],"notifications":["success"]}}')
-      http_client = double("Net::HTTP")
-      allow(http_client).to receive(:start).and_return(roles_response)
-      idr_client = SoarSc::IdrClient.new(http_client)
-    }
-
     context 'without setting roles uri' do
       it 'should raise missing required attribute error' do
+        idr_client = SoarSc::IdrClient.new
         expect {
           idr_client.get_roles(subject_identifier)
         }.to raise_error SoarSc::IdrClient::MissingRequiredAttributeError
       end
     end
 
-    context 'valid roles uri' do
-      it 'should return array of roles' do
-        idr_client.roles_uri = roles_uri
-        roles = idr_client.get_roles(subject_identifier)
-        expect(roles).to be_an_instance_of(Array)
-      end
-    end
+    context 'network error' do 
+      let(:idr_client) {
+        http_client = double("Net::HTTP")
+        allow(http_client).to receive(:start).and_raise("Net::HTTPError")
+        idr_client = SoarSc::IdrClient.new(http_client)
+      }
 
-    context 'network error' do
       it 'should throw a communication error' do
-        idr_client = SoarSc::IdrClient.new
-        idr_client.roles_uri = 'http://localhost'
+        idr_client.roles_uri = roles_uri
         expect {
           roles = idr_client.get_roles(subject_identifier)
         }.to raise_error SoarSc::IdrClient::CommunicationError
       end
     end
 
-    context 'does not return json' do
+
+    context 'valid remote response' do
+
+      let(:idr_client) {
+        roles_response = double('', :body => '{"status":"success","data":{"roles":["hetznerPerson","inetOrgPerson","posixAccount","top"],"notifications":["success"]}}')
+        http_client = double("Net::HTTP")
+        allow(http_client).to receive(:start).and_return(roles_response)
+        idr_client = SoarSc::IdrClient.new(http_client)
+      }
+
+      context 'valid roles uri' do
+        it 'should return array of roles' do
+          idr_client.roles_uri = roles_uri
+          roles = idr_client.get_roles(subject_identifier)
+          expect(roles).to be_an_instance_of(Array)
+        end
+      end
+    end
+
+    context 'invalid remote response' do
+      let(:idr_client) {
+        roles_response = double('', :body => '<html></html>}')
+        http_client = double("Net::HTTP")
+        allow(http_client).to receive(:start).and_return(roles_response)
+        idr_client = SoarSc::IdrClient.new(http_client)
+      }
+
       it 'should throw a unsupported response error' do
-        idr_client = SoarSc::IdrClient.new
         idr_client.roles_uri = roles_uri
         expect {
           roles = idr_client.get_roles(subject_identifier)
         }.to raise_error SoarSc::IdrClient::UnsupportedResponseError
       end
     end
-
   end
 
 end

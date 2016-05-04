@@ -23,6 +23,14 @@ role = 'hetznerPerson'
 attributes = idr_client.get_attributes(subject_identifier, role)
 ```
 
+Get all attributes for subject identifier
+```
+idr_client = SoarSc::IdrClient.new
+idr_client.attributes_uri = SoarSc::Providers::ServiceRegistry::find_first_service_uri('idr-staff-get-attributes')
+subject_identifier = 'charles.mulder@hetzner.co.za'
+attributes = idr_client.get_attributes(subject_identifier)
+```
+
 ## Test
 
 Run unit tests with
