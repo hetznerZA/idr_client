@@ -11,19 +11,19 @@ module SoarSc
   # @example Get roles
   #   idr_client = SoarSc::IdrClient.new
   #   idr_client.roles_uri = SoarSc::Providers::ServiceRegistry::find_first_service_uri('idr-staff-get-roles')
-  #   subject_identifier = 'charles.mulder@hetzner.co.za'
+  #   subject_identifier = 'charles.mulder@example.org'
   #   roles = idr_client.get_roles(subject_identifier)
   # @example Get all attributes
   #   idr_client = SoarSc::IdrClient.new
   #   idr_client.attributes_uri = SoarSc::Providers::ServiceRegistry::find_first_service_uri('idr-staff-get-attributes')
-  #   subject_identifier = 'charles.mulder@hetzner.co.za'
+  #   subject_identifier = 'charles.mulder@example.org'
   #   attributes = idr_client.get_attributes(subject_identifier)
   # @example Get attributes filtered by role
   #   idr_client = SoarSc::IdrClient.new
   #   idr_client.roles_uri = SoarSc::Providers::ServiceRegistry::find_first_service_uri('idr-staff-get-roles')
   #   idr_client.attributes_uri = SoarSc::Providers::ServiceRegistry::find_first_service_uri('idr-staff-get-attributes')
-  #   subject_identifier = 'charles.mulder@hetzner.co.za'
-  #   role = 'hetznerPerson'
+  #   subject_identifier = 'charles.mulder@example.org'
+  #   role = 'technical'
   #   attributes = idr_client.get_attributes(subject_identifier, role)
   class IdrClient < SoarIdm::IdmApi
 
