@@ -1,7 +1,7 @@
 # Idr Client
 
 ## Documentation
-TODO
+[Ruby Gems](https://rubygems.org/gems/idr_client)
 
 ## Example use
 
