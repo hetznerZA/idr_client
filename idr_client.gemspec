@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'idr_client'
-  s.version     = '0.0.0'
+  s.version     = '0.0.2'
   s.date        = '2015-04-12'
   s.summary     = "Identity registry client"
   s.description = "Ruby client for communicating with Hetzner identity registries"

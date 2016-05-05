@@ -13,7 +13,7 @@ describe SoarSc::IdrClient do
     context 'valid uri' do
       it 'should set roles_uri instance attribute to a parsed uri' do
         idr_client.roles_uri = roles_uri
-        expect(idr_client.roles_uri).to be_an_instance_of(URI::HTTP)
+        expect(idr_client.instance_variable_get(:@roles_uri)).to be_an_instance_of(URI::HTTP)
       end
     end
 

@@ -17,7 +17,7 @@ describe SoarSc::IdrClient do
     context 'valid attributes uri' do
       it 'should set attributes_uri instance attribute to a parsed uri' do
         idr_client.attributes_uri = attributes_uri
-        expect(idr_client.attributes_uri).to be_an_instance_of(URI::HTTP)
+        expect(idr_client.instance_variable_get(:@attributes_uri)).to be_an_instance_of(URI::HTTP)
       end
     end
 
@@ -39,7 +39,7 @@ describe SoarSc::IdrClient do
         allow(http_client).to receive(:start).and_return(attributes_response)
         idr_client = SoarSc::IdrClient.new(http_client)
       }
-      it 'should return array of attributes' do
+      it 'should return hash of attributes' do
         idr_client.attributes_uri = attributes_uri
         attributes = idr_client.get_attributes(subject_identifier)
         expect(attributes).to be_an_instance_of(Hash)
