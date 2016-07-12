@@ -28,6 +28,17 @@ describe SoarSc::IdrClient do
 
   describe '#get_roles' do
 
+    context "when asked to provide the roles for a subject identifier" do
+
+      it "should return nil if no subject identifier was provided" do
+        idr_client = SoarSc::IdrClient.new
+        expect(idr_client.get_roles(nil)).to eq(nil)
+        expect(idr_client.get_roles("  ")).to eq(nil)
+        expect(idr_client.get_roles("")).to eq(nil)
+      end
+
+    end
+
     context 'without setting roles uri' do
       it 'should raise missing required attribute error' do
         idr_client = SoarSc::IdrClient.new
@@ -86,6 +97,8 @@ describe SoarSc::IdrClient do
         }.to raise_error SoarSc::IdrClient::UnsupportedResponseError
       end
     end
+
+
   end
 
 end

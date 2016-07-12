@@ -94,20 +94,12 @@ describe SoarSc::IdrClient do
 
       context 'missing subject identifier' do
 
-        context 'nil' do
-          it 'should throw argument error' do
-            expect(idr_client.get_attributes(nil, role)).to eq(nil)
-          end
+        it "should return nil if no subject identifier is provided" do
+          expect(idr_client.get_attributes("", role)).to eq(nil)
+          expect(idr_client.get_attributes(nil, role)).to eq(nil)
+          expect(idr_client.get_attributes(" ", role)).to eq(nil)
         end
-
-        context 'empty string' do
-          it 'should throw argument error' do
-            expect(idr_client.get_attributes(nil, role)).to eq(nil)
-          end
-        end
-
       end
-
     end
 
     context 'invalid remote response' do
